@@ -18,12 +18,16 @@ def get_real_time_trade(symbol):
 		if not os.path.exists('trade'):
 			os.mkdir('trade')
 		name = symbol + 'trade' + '.json'
+		if json.loads(message)["type"] == "ping":
+			pass
 		if os.path.exists('trade/' +  name):
 			with open('trade/' +  name, 'a', encoding='utf-8') as f:
-				json.dump(response.json(), f, ensure_ascii=False, indent=4)
+				print(message)
+				json.dump(json.loads(message), f, ensure_ascii=False, indent=4)
 		else:
 			with open('trade/' +  name, 'w', encoding='utf-8') as f:
-				json.dump(response.json(), f, ensure_ascii=False, indent=4)
+				print(message)
+				json.dump(json.loads(message), f, ensure_ascii=False, indent=4)
 
 	def on_error(ws, error):
 		print(error)
@@ -101,12 +105,14 @@ def get_time_series(symbol,stock_type,start,end,interval):
 		print(name +" file has been created.")
 
 
-# Here's an example of how to use this function
-symbol = 'AAPL'
-today  = datetime.fromtimestamp(time.time())
-one_year = today + relativedelta(years=-1)
-end_time = today.strftime("%d %b %Y  %H:%M:%S")
-start_time  = one_year.strftime("%d %b %Y  %H:%M:%S")
-interval = "1month"
-stock_type = "Stock"
-get_time_series(symbol,stock_type,start_time,end_time,interval)
+# Here's an example of how to use the time_Series function
+# symbol = 'AAPL'
+# today  = datetime.fromtimestamp(time.time())
+# one_year = today + relativedelta(years=-1)
+# end_time = today.strftime("%d %b %Y  %H:%M:%S")
+# start_time  = one_year.strftime("%d %b %Y  %H:%M:%S")
+# interval = "1month"
+# stock_type = "Stock"
+# get_time_series(symbol,stock_type,start_time,end_time,interval)
+# Here's an example of how to use the real time function
+#get_real_time_trade(symbol)
