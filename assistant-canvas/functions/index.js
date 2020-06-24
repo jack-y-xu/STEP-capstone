@@ -30,10 +30,32 @@ app.intent('Default Welcome Intent', conv => {
   
   conv.ask('Do you want to see stock information, learn, play a simulation game, or get news?');
   conv.ask(new HtmlResponse({
-    //url: 'https://integrity-capstone-2020-aed3a.firebaseapp.com'
-    url: 'https://integrity-capstone-2020-aed3a.web.app'
+    url: 'https://integrity-capstone-2020-aed3a.firebaseapp.com'
   }));
 });
+
+// launch app mode
+app.intent('App Mode', (conv, param) => {
+  
+  const userAppModeChoice = param['user-app-mode'].toLowerCase();
+
+  const ssml = 
+    `<speak>
+      <p>Okay, let's get you going with this.</p>
+      <break time="100ms" />
+      <p>Launching ${userAppModeChoice}...</p>
+    </speak>`;
+  
+  conv.ask(ssml);
+
+  // update webapp screen
+  conv.ask(new HtmlResponse({
+    data: {
+      scene: userAppModeChoice,
+    }
+  }));
+})
+
 
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
