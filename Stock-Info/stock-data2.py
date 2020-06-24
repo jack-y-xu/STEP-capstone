@@ -11,9 +11,12 @@ Params:
 Symbol- A string of the stock symbol
 
 Returns:
-A json file named after the symbol giving real time stock data.
+A json file named after the symbol giving real time stock data, or nothing if it is not an individual stock.
 '''
 def get_real_time_trade(symbol):
+	if get_stock_type(symbol) != 'Stock':
+		print("get_real_time_trade only works with individual stocks. ")
+		pass
 	def on_message(ws, message):
 		if not os.path.exists('trade'):
 			os.mkdir('trade')
@@ -46,6 +49,26 @@ def get_real_time_trade(symbol):
 	                              on_close = on_close)
 	    ws.on_open = on_open
 	    ws.run_forever()
+
+def get_stock_type(symbol):
+	response = requests.get('https://api.twelvedata.com/symbol_search',
+		params={
+			'symbol':symbol
+		})
+	symbol_type = ""
+	if response.json()["status"] == "error":
+		print("Response has given error. File not created.")
+		print(response.json())
+	else:
+		symbol_type=response.json()["data"][0]["instrument_type"]
+		print(symbol_type)
+		if symbol_type == "Common Stock":
+			symbol_type = "Stock"
+		elif symbol_type == "Real Estate Investment Trust (REIT)":
+			symbol_type = "REIT"
+		elif symbol_type == "Digital Currency":
+			symbol_type = "Index"
+	return symbol_type
 
 '''
 Params:
@@ -103,8 +126,6 @@ def get_time_series(symbol,stock_type,start,end,interval):
 	with open('time_series/' +  name, 'w', encoding='utf-8') as f:
 		json.dump(response.json(), f, ensure_ascii=False, indent=4)
 		print(name +" file has been created.")
-
-
 # Here's an example of how to use the time_Series function
 # symbol = 'AAPL'
 # today  = datetime.fromtimestamp(time.time())
@@ -115,4 +136,4 @@ def get_time_series(symbol,stock_type,start,end,interval):
 # stock_type = "Stock"
 # get_time_series(symbol,stock_type,start_time,end_time,interval)
 # Here's an example of how to use the real time function
-#get_real_time_trade(symbol)
+# get_real_time_trade(symbol)
