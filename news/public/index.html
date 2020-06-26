@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Disable favicon requests -->
+  <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,">
+
+  <!-- Load Assistant Interactive Canvas API -->
+  <script type="text/javascript"
+    src="https://www.gstatic.com/assistant/interactivecanvas/api/interactive_canvas.min.js"></script>
+
+  <!-- Load Assistant callbacks class -->
+  <script type="text/javascript" src="js/assistant.js"></script>
+
+  <!-- Load custom CSS -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body onload="fetchNewsAndDisplay()">
+  <div class="view">
+  <ul id="news-list" list-style-type="circle">
+    <li>TEST TEXT</li>
+  </ul>
+    <div class="debug">
+      <div class="logs"></div>
+    </div>
+  </div>
+  <!-- Load logging -->
+  <script type="text/javascript" src="js/log.js"></script>
+</body>
+</html>
