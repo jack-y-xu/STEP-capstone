@@ -3,7 +3,6 @@ certifi==2020.6.20
 chardet==3.0.4
 cryptography==2.6.1
 cycler==0.10.0
-distro-info==0.21
 entrypoints==0.3
 finnhub-python==1.1.4
 gevent==20.6.2
@@ -16,12 +15,9 @@ matplotlib==3.2.2
 mpl-finance==0.10.1
 numpy==1.19.0
 pandas==1.0.5
+pandas-datareader
 plotly==4.8.1
 pycrypto==2.6.1
-pycurl==7.43.0.2
-PyGObject==3.30.4
-pyparsing==2.4.7
-python-apt==1.8.4.1
 python-dateutil==2.8.1
 pytimeparse==1.1.8
 pytz==2020.1
@@ -35,5 +31,7 @@ unattended-upgrades==0.1
 urllib3==1.25.9
 websocket==0.2.1
 websocket-client==0.57.0
+yfinance
 zope.event==4.4
 zope.interface==5.1.0
+

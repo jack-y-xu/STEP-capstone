@@ -22,7 +22,7 @@ def get_real_time_trade(symbol):
             os.mkdir('trade')
         name = symbol + 'trade' + '.json'
         if json.loads(message)["type"] == "ping":
-            pass
+            return None
         if os.path.exists('trade/' +  name):
             with open('trade/' +  name, 'a', encoding='utf-8') as f:
                 print(message)
@@ -99,7 +99,8 @@ def get_time_series(symbol,stock_type,start,end,interval):
     if response.json()["status"] == "error":
         print("Response has given error. File not created.")
         print(response.json())
-        while response.json()["code"] == 429:
+        retry_num = 0
+        while response.json()["code"] == 429 and retry_num < 5:
             print("We have hit our rate limit for the minute, queing until we can receive data.")
             time.sleep(60)
             response = requests.get(
@@ -113,6 +114,7 @@ def get_time_series(symbol,stock_type,start,end,interval):
                 'type' : stock_type
                 },
             )
+            retry_num+=1
         if response.json()["status"] == "error":
             print("Response has given request error. File not created.")
             pass
@@ -127,7 +129,7 @@ def get_time_series(symbol,stock_type,start,end,interval):
         json.dump(response.json(), f, ensure_ascii=False, indent=4)
         print(name +" file has been created.")
 # Here's an example of how to use the time_Series function
-# symbol = 'AAPL'
+symbol = 'AAPL'
 # today  = datetime.fromtimestamp(time.time())
 # one_year = today + relativedelta(years=-1)
 # end_time = today.strftime("%d %b %Y  %H:%M:%S")
@@ -136,4 +138,4 @@ def get_time_series(symbol,stock_type,start,end,interval):
 # stock_type = "Stock"
 # get_time_series(symbol,stock_type,start_time,end_time,interval)
 # Here's an example of how to use the real time function
-# get_real_time_trade(symbol)
+get_real_time_trade(symbol)
