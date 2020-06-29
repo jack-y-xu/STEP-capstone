@@ -34,3 +34,13 @@ class Portfolio:
         self.money_spent = investment.total_purchase_price
         self.personal_value += investment.total_purchase_price
         self.investments.append(investment)
+
+    def to_dict(self):
+        data = {
+            'investments': self.investments,
+            'personal_value': self.personal_value,
+            'gains': self.gain,
+            'losses': self.loss 
+        }
+
+        return data

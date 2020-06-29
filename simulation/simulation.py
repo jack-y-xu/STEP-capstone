@@ -14,12 +14,12 @@ class Simulation:
     def __init__(self):
         self.user_portfolio = Portfolio()
         self.day_index = 0
-        self.time_series = np.empty(0)
+        self.time_series = None
         self.symbol = None
-        self.spending_money = STARTING_MONEY_AMOUNT 
+        self.spending_money = STARTING_MONEY_AMOUNT
 
     def get_curr_price(self):
-        if (self.time_series.size == 0):
+        if (self.time_series is None):
             raise Exception("no data to look up - no symbol entered.")
 
         # self.time_series[self.day_index] is a dictionary with the
@@ -52,3 +52,21 @@ class Simulation:
         self.user_portfolio.make_investment(inv)
         self.spending_money -= inv_purchase_cost
         return inv_purchase_cost
+
+    # convert class to dictionary for firestore
+    def to_dict_portfolio(self):
+        data = {
+            'portfolio': self.user_portfolio.to_dict(),
+            'symbol': self.symbol
+        }
+
+        return data
+
+    def to_dict_stats(self):
+        data = {
+            'day_index': self.day_index,
+            'money_left': self.spending_money,
+            'time_series': self.time_series
+        }
+
+        return data
