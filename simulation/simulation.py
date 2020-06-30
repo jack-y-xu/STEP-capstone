@@ -33,13 +33,20 @@ class Simulation:
         return self.symbol
     
     def update_symbol(self, symbol):
-        self.symbol = symbol
-        self.time_series = get_stock_time_series(symbol)
+        if (symbol is not None):
+            self.symbol = symbol
+            self.time_series = get_stock_time_series(symbol)
+
+    # param: increment - integer for how many days ahead to advance
+    def update_day(self, increment):
+        self.day_index+=increment
+        return self.day_index
 
     # params: symbol - string
     # num_shares - integer 
     # returns the total price of the investment
     def make_investment(self, symbol, num_shares):
+
         if (self.symbol is None):
             self.update_symbol(symbol)
     
@@ -59,7 +66,6 @@ class Simulation:
             'portfolio': self.user_portfolio.to_dict(),
             'symbol': self.symbol
         }
-
         return data
 
     def to_dict_stats(self):
@@ -68,5 +74,11 @@ class Simulation:
             'money_left': self.spending_money,
             'time_series': self.time_series
         }
-
         return data
+
+    def from_dict_portfolio(self, source):
+        self.update_symbol(source['symbol'])
+        self.user_portfolio.from_dict(source['portfolio'])
+        
+    def from_dict_stats(self, source):
+        self.update_day(source['day_index'])
