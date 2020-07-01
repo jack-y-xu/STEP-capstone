@@ -14,7 +14,7 @@ interactiveCanvas.ready({
 
     else if (data.scene === 'simulation') {
       var pageContent = document.getElementById('content');
-      pageContent.innerHTML = "changing the page";
+      pageContent.innerHTML = "<h1>Simulation</h1>";
     }
 
     else if (data.scene === 'news') {
