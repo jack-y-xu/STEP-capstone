@@ -20,7 +20,8 @@ class Simulation:
 
     def get_curr_price(self):
         if (self.time_series is None):
-            raise Exception("no data to look up - no symbol entered.")
+            #raise Exception("no data to look up - no symbol entered.")
+            return None
 
         # self.time_series[self.day_index] is a dictionary with the
         # data and closing price
@@ -58,6 +59,7 @@ class Simulation:
 
         self.user_portfolio.make_investment(inv)
         self.spending_money -= inv_purchase_cost
+
         return inv_purchase_cost
 
     # convert class to dictionary for firestore
@@ -72,7 +74,8 @@ class Simulation:
         data = {
             'day_index': self.day_index,
             'money_left': self.spending_money,
-            'time_series': self.time_series
+            'time_series': self.time_series,
+            'current_price': self.get_curr_price()
         }
         return data
 
