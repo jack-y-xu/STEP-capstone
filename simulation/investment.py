@@ -1,4 +1,5 @@
 # represents a single investment
+# is READ ONLY
 class Investment:
 
     # params: symbol - string
@@ -15,3 +16,21 @@ class Investment:
 
     def get_share_price(self):
         return self.share_price
+
+    def to_dict(self):
+        data = {
+            'symbol': self.symbol,
+            'share_price': self.share_price,
+            'num_shares': self.num_shares,
+            'total_purchase_price': self.total_purchase_price
+        }
+
+        return data
+
+# returns a new Investment object
+def from_dict(source):
+    symbol = source['symbol']
+    share_price = source['share_price']
+    num_shares = source['num_shares']
+
+    return Investment(symbol, share_price, num_shares)
