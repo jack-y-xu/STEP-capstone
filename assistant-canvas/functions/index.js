@@ -1,11 +1,13 @@
-'use strict';
-
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 require("firebase/firestore"); // for side effects
 const {dialogflow, HtmlResponse} = require('actions-on-google');
 const app = dialogflow({debug: true});
 
+const STARTING_MONEY = 10000;
+var userID = null;
+
+'use strict';
 
 // Initialize Firestore through Firebase
 admin.initializeApp({
@@ -66,9 +68,40 @@ app.intent('Simulation', conv => {
     }
   }));
 
+  setUpFirestoreForUser();
+
   conv.ask('Tell me the ticker of the stock, ETF, or mutual fund you want to invest in.');
-  conv.ask('If you don\'t know what those terms mean, you can ask to launch a tutorial.');
 })
+
+/*
+* firestore hierarchy: users (collection) --> userID (document for each user)
+* --> simulation (collection) --> portfolio & stats (both are documents)
+*
+* initalizes firestore setup for the user
+*/
+async function setUpFirestoreForUser() {
+  const portfolio_data = {
+    gains: 0,
+    money_left: STARTING_MONEY,
+    investments: [],
+    losses: 0,
+    personal_value: STARTING_MONEY,
+    symbol: null
+  }
+
+  const stats_data = {
+    current_price: null,
+    day_index: 0,
+    time_series: null
+  }
+
+  const userDocRef = database.collection('users').doc();
+  userID = userDocRef.id;
+  const simRef = userDocRef.collection('simulation');
+
+  const portfolioRes = await simRef.doc('portfolio').set(portfolio_data);
+  const statsRes = await simRef.doc('stats').set(stats_data);
+}
 
 // deal with simulation
 app.intent('Simulation - Invest', (conv, param) => {
