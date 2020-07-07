@@ -1,22 +1,24 @@
 
-async function displayNews(sortBySentiment=true) {
+// display news function responsible for calling the functions for fetching, sorting by sentiment and rendering news
+async function displayNews(sortBySentiment = true) {
     var articles = await fetchNews();
     console.log("Below is articles from fetchNews function");
     console.log(articles);
 
-    //assign sentiment score to each article
+    // assign sentiment score to each article
     if (sortBySentiment) articles = await getSentimentsAndSort(articles);
 
-    //render articles
+    // render articles
     renderNews(articles);
 }
 
+// function for getting sentiment and sorting the articles from positive to negative sentiment
 async function getSentimentsAndSort(articles) {
-    //add articles to a json obj
+    // add articles to a json obj
     var jsonObject = {};
     jsonObject.documents = [];
     var leng = Object.keys(articles).length;
-    for(i=0;i<leng;i++) {
+    for(i = 0;i < leng;i++) {
         var article = articles[i];
         var docObject = {};
         docObject.id = i+1;
@@ -24,11 +26,11 @@ async function getSentimentsAndSort(articles) {
         docObject.text = article.name + ". " + article.description;
         jsonObject.documents.push(docObject);
     }
-    //make obj into json
+    // make obj into json
     var docJSON = JSON.stringify(jsonObject);
     console.log(articles);
     console.log(docJSON);
-    //get the sentiment values
+    // get the sentiment values
     var documents = {};
     await fetch("https://microsoft-text-analytics1.p.rapidapi.com/sentiment", {
         "method": "POST",
@@ -42,12 +44,12 @@ async function getSentimentsAndSort(articles) {
     }).then(response => response.json()).then(response => {
         documents = response.documents;
     });
-    //now assign the scores to the actual articles
-    for(i=0;i<leng;i++) {
+    // now assign the scores to the actual articles
+    for(i = 0;i < leng;i++) {
         var doc = documents[i];
         articles[i].positivity = doc.documentScores.positive - doc.documentScores.negative;
     }
-    //now sort the articles and return them
+    // now sort the articles and return them
     console.log(typeof(articles));
     articles = [].slice.call(articles).sort(function(a,b){
         if (a.positivity == b.positivity) return 0;
@@ -56,6 +58,7 @@ async function getSentimentsAndSort(articles) {
     return articles;
 }
 
+// function for fetching news and returning it as an array
 async function fetchNews() {
     var url = 'https://bing-news-search1.p.rapidapi.com/news/search?' +
         'q=AAPL%20STOCK';
@@ -69,9 +72,10 @@ async function fetchNews() {
     }).then(response => response.json()).then(articles => articles.value);
 }
 
+// function for rendering news
 async function renderNews(articles) {
     var list = document.getElementById("news-list");
-    for(i=0;i<articles.length;i++) {
+    for(i = 0;i < articles.length;i++) {
         var article = articles[i];
         var newsTitle = document.createElement("li");
         newsTitle.appendChild(document.createTextNode(article.name));
