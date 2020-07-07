@@ -4,13 +4,10 @@ require("firebase/firestore"); // for side effects
 const {dialogflow, HtmlResponse} = require('actions-on-google');
 const app = dialogflow({debug: true});
 
-<<<<<<< HEAD
 const STARTING_MONEY = 10000;
 var userID = null;
 
 'use strict';
-=======
->>>>>>> 11e819743ad956179fc3098e89625833256e368d
 
 // Initialize Firestore through Firebase
 admin.initializeApp({
