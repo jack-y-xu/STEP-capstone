@@ -2,8 +2,6 @@
 // display news function responsible for calling the functions for fetching, sorting by sentiment and rendering news
 async function displayNews(sortBySentiment = true) {
     var articles = await fetchNews();
-    console.log("Below is articles from fetchNews function");
-    console.log(articles);
 
     // assign sentiment score to each article
     if (sortBySentiment) articles = await getSentimentsAndSort(articles);
@@ -14,6 +12,7 @@ async function displayNews(sortBySentiment = true) {
 
 // function for getting sentiment and sorting the articles from positive to negative sentiment
 async function getSentimentsAndSort(articles) {
+
     // add articles to a json obj
     var jsonObject = {};
     jsonObject.documents = [];
@@ -26,10 +25,10 @@ async function getSentimentsAndSort(articles) {
         docObject.text = article.name + ". " + article.description;
         jsonObject.documents.push(docObject);
     }
+
     // make obj into json
     var docJSON = JSON.stringify(jsonObject);
-    console.log(articles);
-    console.log(docJSON);
+
     // get the sentiment values
     var documents = {};
     await fetch("https://microsoft-text-analytics1.p.rapidapi.com/sentiment", {
@@ -44,17 +43,19 @@ async function getSentimentsAndSort(articles) {
     }).then(response => response.json()).then(response => {
         documents = response.documents;
     });
+
     // now assign the scores to the actual articles
     for(i = 0;i < leng;i++) {
         var doc = documents[i];
         articles[i].positivity = doc.documentScores.positive - doc.documentScores.negative;
     }
+
     // now sort the articles and return them
-    console.log(typeof(articles));
     articles = [].slice.call(articles).sort(function(a,b){
         if (a.positivity == b.positivity) return 0;
         return a.positivity > b.positivity ? 1 : -1;
     });
+
     return articles;
 }
 
