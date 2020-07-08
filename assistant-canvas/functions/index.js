@@ -49,7 +49,6 @@ app.intent('Default Welcome Intent', conv => {
  
 // launch app mode
 app.intent('Simulation', conv => {
-  
   const ssml = 
     `<speak>
       <p>Okay, let's get you going with this.</p>
